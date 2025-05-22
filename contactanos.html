@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto y Ubicación | F de J Ferreteros</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        body { font-family: 'Montserrat', Arial, sans-serif; background: #f4f6fa; }
+        .custom-navbar {
+            background: linear-gradient(90deg, #F86A03 0%, #ff9900 100%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .brand-logo { height: 52px; }
+        .navbar-nav .nav-link { font-weight: bold; font-size: 1.1rem; }
+
+       .main-section {
+  max-width: 900px; /* o el ancho que prefieras */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2.5rem 1.3rem;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(90,90,90,0.09);
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+        .contact-title {
+            font-weight: 700;
+            color: #F86A03;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.02em;
+        }
+        .contact-info-list li {
+            margin-bottom: 14px;
+            font-size: 1.08rem;
+        }
+        .social-links .btn {
+            margin-bottom: 10px;
+        }
+        .map-responsive {
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            height: 0;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(90,90,90,0.10);
+        }
+        .map-responsive iframe {
+            left: 0; top: 0; height: 100%; width: 100%; position: absolute;
+            border-radius: 14px;
+        }
+        /* Footer igual al index */
+        footer {
+            background: #222 !important; color: #eee; border-radius: 0 0 18px 18px;
+        }
+        .footer-link { color: #F86A03; }
+        .footer-link:hover { color: #fff; text-decoration: underline; }
+        @media (max-width: 991px) {
+            .main-section { padding: 2rem 0.5rem; }
+        }
+        @media (max-width: 767px) {
+            .main-section { padding: 1.2rem 0.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="Imagenes/logo.png" alt="F de J Ferreteros" class="brand-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="catalogo.html">Catálogo</a></li>
+                    <li class="nav-item active"><a class="nav-link" href="contactanos.html">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTACTO + UBICACIÓN -->
+    <section class="container main-section">
+        <div class="row align-items-start">
+            <!-- INFORMACIÓN DE CONTACTO -->
+            <div class="col-lg-5 mb-4">
+                <div class="contact-title mb-3"><i class="fas fa-envelope"></i> Contáctanos</div>
+                <ul class="list-unstyled contact-info-list mb-3">
+                    <li><i class="fas fa-phone-alt mr-2"></i><b>Teléfono:</b> +52 492 923 2361</li>
+                    <li><i class="fas fa-envelope mr-2"></i><b>Email:</b> fdejferreteros1@gmail.com</li>
+                    <li><i class="fas fa-clock mr-2"></i><b>Horario:</b>
+                        <br>Lunes a Viernes: 8:00am - 7:00pm
+                        <br>Sábado: 9:00am - 3:00pm
+                    </li>
+                    <li><i class="fas fa-map-marker-alt mr-2"></i><b>Dirección:</b>
+                        <br>Av. H. Colegio Militar Ote. 74-B, Guadalupe, Zacatecas
+                    </li>
+                </ul>
+                <div>
+                    <div class="contact-title" style="font-size:1.3rem; color:#0083fe;"><i class="fas fa-hashtag mr-2"></i>Redes Sociales</div>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61558526591289"
+                           class="btn btn-outline-primary btn-sm" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
+                    </div>
+                </div>
+            </div>
+            <!-- MAPA -->
+            <div class="col-lg-7 mb-4">
+                <div class="contact-title mb-3"><i class="fas fa-map-marked-alt"></i> ¿Dónde estamos?</div>
+                <div class="map-responsive">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3679.458113860409!2d-102.513173!3d22.7483741!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14075c684217b63f%3A0x5d9aba94a8e47f08!2sF%20de%20J%20FERRETEROS!5e0!3m2!1ses-419!2smx!4v1746741991861!5m2!1ses-419!2smx"
+                            width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (idéntico al index) -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <!-- Contacto -->
+                <div class="col-lg-4 mb-4">
+                    <h3 class="h5"><i class="fas fa-phone-alt mr-2"></i>Contacto</h3>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-phone fa-fw mr-2"></i>+52 492 923 2361</li>
+                        <li><i class="fas fa-envelope fa-fw mr-2"></i>fdejferreteros1@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt fa-fw mr-2"></i>Av. H. Colegio Militar Ote. 74-B, Guadalupe, Zacatecas</li>
+                    </ul>
+                </div>
+                <!-- Redes Sociales -->
+                <div class="col-lg-4 mb-4">
+                    <h3 class="h5"><i class="fas fa-hashtag mr-2"></i>Redes Sociales</h3>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61558526591289"
+                           class="btn btn-outline-light btn-sm m-1" target="_blank" rel="noopener">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </a>
+                    </div>
+                </div>
+                <!-- Enlaces rápidos -->
+                <div class="col-lg-4 mb-4">
+                    <h3 class="h5"><i class="fas fa-link mr-2"></i>Enlaces rápidos</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="footer-link"><i class="fas fa-cogs mr-2"></i>Inicio</a></li>
+                        <li><a href="catalogo.html" class="footer-link"><i class="fas fa-th-list mr-2"></i>Catálogo</a></li>
+                        <li><a href="contactanos.html" class="footer-link"><i class="fas fa-envelope mr-2"></i>Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center mt-4 pt-3 border-top">
+                <p class="mb-0">&copy; 2024 F de J Ferreteros. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

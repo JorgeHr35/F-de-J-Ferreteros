@@ -1,0 +1,25 @@
+/* Barra de navegación personalizada */
+.navbar {
+    background-color: #F86A03; /* Naranja */
+}
+
+/* Estilos para el buscador */
+.form-control {
+    border-radius: 0; /* Elimina el borde redondeado */
+}
+
+/* Estilo para la línea gris debajo de la barra de navegación */
+.bg-light {
+    background-color: #474f56 !important; /* Gris más oscuro */
+}
+
+/* Enlaces en la línea gris */
+.bg-light a {
+    color: #ffffff !important; /* Color de texto blanco para mejorar el contraste */
+    text-decoration: none; /* Elimina el subrayado */
+    font-weight: bold;
+}
+
+.bg-light a:hover {
+    color: #F86A03; /* Cambia el color a naranja al pasar el ratón */
+}
