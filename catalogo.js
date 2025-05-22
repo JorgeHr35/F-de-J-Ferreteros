@@ -1,162 +1,222 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catálogo de Productos | F de J Ferreteros</title>
 
-const supabase = createClient(
-  "https://qdxkswpdqwaumdedfcap.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeGtzd3BkcXdhdW1kZWRmY2FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4NDE4MzgsImV4cCI6MjA2MzQxNzgzOH0.Gzy2IYXyNiNAsXRaYV65bXLLrGSBnVBH6XRLpLhVxAE"
-);
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
 
-// Referencias DOM
-const adminForm = document.getElementById('admin-form');
-const loginForm = document.getElementById('login-form');
-const actionsHeader = document.getElementById('actions-header');
+  <!-- Font Awesome (CDN seguro) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-const productForm = document.getElementById('product-form');
-const productIdInput = document.getElementById('product-id');
-const imageInput = document.getElementById('product-image');
-const nameInput = document.getElementById('product-name');
-const descriptionInput = document.getElementById('product-description');
-const priceInput = document.getElementById('product-price');
-const destacadoInput = document.getElementById('product-destacado');
-const productsBody = document.getElementById('products-body');
 
-// Detectar sesión activa
-const { data: initialSession } = await supabase.auth.getSession();
-handleAuthUI(initialSession?.session?.user);
+  
 
-supabase.auth.onAuthStateChange((event, session) => {
-  handleAuthUI(session?.user);
-});
-
-function handleAuthUI(user) {
-  const isAdmin = user && user.email === 'admin@ferreteria.com';
-  adminForm.style.display = isAdmin ? 'block' : 'none';
-  loginForm.style.display = isAdmin ? 'none' : 'block';
-  actionsHeader.style.display = isAdmin ? 'table-cell' : 'none';
-  renderProducts(isAdmin);
-}
-
-// Login
-window.login = async function (e) {
-  e.preventDefault();
-  const email = document.getElementById('login-email').value;
-  const password = document.getElementById('login-password').value;
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    alert("Datos incorrectos");
-    console.error(error);
-  }
-};
-
-// Logout
-window.logout = async function () {
-  await supabase.auth.signOut();
-};
-
-// Renderizar productos
-async function renderProducts(isAdmin) {
-  productsBody.innerHTML = ''; // Limpiar la tabla antes de renderizar
-
-  const { data: productos, error } = await supabase.from('productos').select('*');
-  if (error) {
-    console.error('Error al obtener productos:', error);
-    return;
-  }
-
-  const vistos = new Set();
-
-  productos.forEach(p => {
-    if (!p.id || vistos.has(p.id)) return;
-    vistos.add(p.id);
-
-    const destacadoText = p.destacado ? 'Sí' : 'No';
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td><img src="${p.image_url}" class="product-img" alt="${p.name}" /></td>
-      <td>${p.name}</td>
-      <td>${p.description}</td>
-      <td>$${parseFloat(p.price).toFixed(2)}</td>
-      ${isAdmin ? `
-      <td>
-        <button class="btn btn-warning btn-sm" onclick="editProduct('${p.id}')">Editar</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">Eliminar</button>
-        <br><small>Destacado: ${destacadoText}</small>
-      </td>` : ''}
-    `;
-    productsBody.appendChild(row);
-  });
-}
-
-// Guardar producto
-productForm.addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const id = productIdInput.value;
-  const name = nameInput.value;
-  const description = descriptionInput.value;
-  const price = parseFloat(priceInput.value);
-  const destacado = destacadoInput.checked;
-  const imageFile = imageInput.files[0];
-
-  let image_url = "";
-
-  if (imageFile) {
-    const safeFileName = `${Date.now()}_${imageFile.name.replace(/\s/g, "_")}`;
-    const { error: uploadError } = await supabase
-      .storage
-      .from('imagenes')
-      .upload(safeFileName, imageFile, { upsert: true });
-
-    if (uploadError) {
-      alert("Error al subir imagen");
-      console.error(uploadError);
-      return;
+  <style>
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #f4f6fa;
     }
+    .custom-navbar {
+      background: linear-gradient(90deg, #F86A03 0%, #ff9900 100%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .brand-logo {
+      height: 52px;
+    }
+    .navbar-nav .nav-link {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    main.container {
+      max-width: 960px;
+      margin: 40px auto 80px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 6px 32px rgba(90, 90, 90, 0.09);
+    }
+    h1 {
+      color: #F86A03;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    #admin-form .card {
+      border-radius: 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    #admin-form .card-header {
+      background: #F86A03;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.3rem;
+      border-radius: 18px 18px 0 0;
+    }
+    #admin-form label {
+      font-weight: 600;
+      color: #333;
+    }
+    #admin-form button.btn-success {
+      font-weight: 700;
+      border-radius: 6px;
+    }
+    #admin-form button.btn-danger {
+      margin-top: 15px;
+      font-weight: 700;
+      border-radius: 6px;
+    }
+    .table-responsive {
+      margin-top: 30px;
+    }
+    .table thead.thead-dark th {
+      background-color: #F86A03;
+      color: white;
+      font-weight: 700;
+      text-align: center;
+    }
+    .table tbody tr td {
+      vertical-align: middle;
+      text-align: center;
+    }
+    .table img.product-img {
+      max-width: 80px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    }
+    #login-form h2 {
+      color: #F86A03;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    #login-form form {
+      max-width: 460px;
+      margin: 0 auto;
+    }
+    #login-form input.form-control {
+      border-radius: 8px;
+    }
+    #login-form button.btn-primary {
+      font-weight: 700;
+      border-radius: 8px;
+    }
+    #login-form small {
+      display: block;
+      margin-top: 10px;
+      color: #666;
+      font-style: italic;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="Imagenes/logo.png" alt="F de J Ferreteros" class="brand-logo" />
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item active"><a class="nav-link" href="catalogo.html">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link" href="contactanos.html">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-    image_url = `https://qdxkswpdqwaumdedfcap.supabase.co/storage/v1/object/public/imagenes/${safeFileName}`;
-  } else if (id) {
-    const { data: existing } = await supabase.from('productos').select('image_url').eq('id', id).single();
-    image_url = existing?.image_url || "";
-  }
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="container">
+    <h1>Catálogo de Productos</h1>
 
-  const data = {
-    name,
-    description,
-    price,
-    destacado,
-    image_url
-  };
+    <!-- FORMULARIO ADMIN -->
+    <div id="admin-form" style="display:none;">
+      <div class="card mb-4">
+        <div class="card-header">Agregar/Editar Producto</div>
+        <div class="card-body">
+          <form id="product-form">
+            <input type="hidden" id="product-id" value="" />
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label for="product-image">Imagen</label>
+                <input type="file" class="form-control" id="product-image" accept="image/*" />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="product-name">Nombre</label>
+                <input type="text" class="form-control" id="product-name" required />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="product-description">Descripción</label>
+                <input type="text" class="form-control" id="product-description" required />
+              </div>
+              <div class="form-group col-md-2">
+                <label for="product-price">Precio</label>
+                <input type="number" class="form-control" id="product-price" required />
+              </div>
+              <div class="form-group col-md-2 d-flex align-items-center">
+                <div class="form-check mb-2">
+                  <input type="checkbox" class="form-check-input" id="product-destacado" />
+                  <label class="form-check-label" for="product-destacado">Destacado</label>
+                </div>
+              </div>
+                <div class="form-group col-md-2 d-flex align-items-end">
+                  <button type="submit" class="btn btn-success btn-block" id="save-btn" style="height: 45px;">Guardar</button>
+                </div>
+            </div>
+          </form>
+          <button class="btn btn-danger" onclick="logout()">Cerrar sesión de administrador</button>
+        </div>
+      </div>
+    </div>
 
-  if (id) {
-    await supabase.from('productos').update(data).eq('id', id);
-  } else {
-    await supabase.from('productos').insert([data]);
-  }
+    <!-- TABLA DE PRODUCTOS -->
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover" id="products-table">
+        <thead class="thead-dark">
+          <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th id="actions-header" style="display:none;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="products-body"></tbody>
+      </table>
+    </div>
 
-  this.reset();
-  destacadoInput.checked = false;
-  productIdInput.value = '';
-  renderProducts(true);
-});
+    <!-- LOGIN -->
+    <div id="login-form" class="mt-5 text-center" style="display:none;">
+      <h2>Administración de productos</h2>
+      <form onsubmit="login(event)" class="form-inline justify-content-center">
+        <input type="email" id="login-email" class="form-control mb-2 mr-sm-2" placeholder="Correo admin" required />
+        <input type="password" id="login-password" class="form-control mb-2 mr-sm-2" placeholder="Contraseña" required />
+        <button type="submit" class="btn btn-primary mb-2">Iniciar sesión</button>
+      </form>
+      <small>Solo el administrador puede agregar, editar o eliminar productos.</small>
+    </div>
+  </main>
 
-// Editar producto
-window.editProduct = async function (id) {
-  const { data: p } = await supabase.from('productos').select('*').eq('id', id).single();
-  if (!p) return;
-  productIdInput.value = p.id;
-  imageInput.value = '';
-  nameInput.value = p.name;
-  descriptionInput.value = p.description;
-  priceInput.value = p.price;
-  destacadoInput.checked = p.destacado || false;
-  document.getElementById('save-btn').textContent = 'Actualizar';
-};
-
-// Eliminar producto
-window.deleteProduct = async function (id) {
-  if (confirm('¿Eliminar este producto?')) {
-    await supabase.from('productos').delete().eq('id', id);
-    renderProducts(true);
-  }
-};
+  <!-- SCRIPTS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  
+  <script type="module" src="catalogo.js"></script>
+</body>
+</html>
