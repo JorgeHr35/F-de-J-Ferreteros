@@ -19,26 +19,30 @@ const priceInput = document.getElementById('product-price');
 const destacadoInput = document.getElementById('product-destacado');
 const productsBody = document.getElementById('products-body');
 
-// Evitar render duplicado
-let hasRendered = false;
+// Seguimiento de usuario actual para evitar dobles renderizados
+let currentUserEmail = null;
 
-// Sesión
+// Detectar sesión activa al cargar
 const { data: initialSession } = await supabase.auth.getSession();
-handleAuthUI(initialSession?.session?.user);
+await handleAuthUI(initialSession?.session?.user);
 
-supabase.auth.onAuthStateChange((event, session) => {
-  handleAuthUI(session?.user);
+// Escuchar cambios de sesión
+supabase.auth.onAuthStateChange(async (_event, session) => {
+  await handleAuthUI(session?.user);
 });
 
-function handleAuthUI(user) {
+async function handleAuthUI(user) {
   const isAdmin = user && user.email === 'admin@ferreteria.com';
+
+  // Evitar render doble
+  if (user?.email === currentUserEmail) return;
+  currentUserEmail = user?.email || null;
+
   adminForm.style.display = isAdmin ? 'block' : 'none';
   loginForm.style.display = isAdmin ? 'none' : 'block';
   actionsHeader.style.display = isAdmin ? 'table-cell' : 'none';
-  if (!hasRendered) {
-    renderProducts(isAdmin);
-    hasRendered = true;
-  }
+
+  await renderProducts(isAdmin);
 }
 
 // Login
@@ -58,6 +62,7 @@ window.login = async function (e) {
 // Logout
 window.logout = async function () {
   await supabase.auth.signOut();
+  // handleAuthUI se ejecutará automáticamente por onAuthStateChange
 };
 
 // Renderizar productos
@@ -70,12 +75,7 @@ async function renderProducts(isAdmin) {
     return;
   }
 
-  const vistos = new Set();
-
   productos.forEach(p => {
-    if (!p.id || vistos.has(p.id)) return;
-    vistos.add(p.id);
-
     const destacadoText = p.destacado ? 'Sí' : 'No';
     const row = document.createElement('tr');
     row.innerHTML = `
@@ -137,23 +137,13 @@ productForm.addEventListener('submit', async function (e) {
   if (id) {
     await supabase.from('productos').update(data).eq('id', id);
   } else {
-    const { data: inserted, error: insertError } = await supabase
-      .from('productos')
-      .insert([data])
-      .select()
-      .single();
-
-    if (insertError) {
-      console.error('Error insertando producto:', insertError);
-      return;
-    }
+    await supabase.from('productos').insert([data]);
   }
 
   this.reset();
   destacadoInput.checked = false;
   productIdInput.value = '';
-  hasRendered = false; // forzar recarga limpia
-  renderProducts(true);
+  await renderProducts(true);
 });
 
 // Editar producto
@@ -173,7 +163,6 @@ window.editProduct = async function (id) {
 window.deleteProduct = async function (id) {
   if (confirm('¿Eliminar este producto?')) {
     await supabase.from('productos').delete().eq('id', id);
-    hasRendered = false;
-    renderProducts(true);
+    await renderProducts(true);
   }
 };
