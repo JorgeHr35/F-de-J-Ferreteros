@@ -202,16 +202,18 @@
     </div>
 
     <!-- LOGIN -->
-    <div id="login-form" class="mt-5 text-center" style="display:none;">
-      <h2>Administración de productos</h2>
-      <form onsubmit="login(event)" class="form-inline justify-content-center">
-        <input type="email" id="login-email" class="form-control mb-2 mr-sm-2" placeholder="Correo admin" required />
-        <input type="password" id="login-password" class="form-control mb-2 mr-sm-2" placeholder="Contraseña" required />
-        <button type="submit" class="btn btn-primary mb-2">Iniciar sesión</button>
-      </form>
-      <small>Solo el administrador puede agregar, editar o eliminar productos.</small>
-    </div>
-  </main>
+  <div id="login-form" class="mt-5 text-center" style="display:none;">
+  <h3 style="color: #d9534f;">Este espacio es solo para administrador</h3>
+  <h2>Administración de productos</h2>
+  <form onsubmit="login(event)" class="form-inline justify-content-center">
+    <input type="email" id="login-email" class="form-control mb-2 mr-sm-2" placeholder="Correo admin" required />
+    <input type="password" id="login-password" class="form-control mb-2 mr-sm-2" placeholder="Contraseña" required />
+    <button type="submit" class="btn btn-primary mb-2">Iniciar sesión</button>
+  </form>
+  <small>Solo el administrador puede agregar, editar o eliminar productos.</small>
+</div>
+</main>
+
 
   <!-- SCRIPTS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
